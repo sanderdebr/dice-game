@@ -1,34 +1,39 @@
-/*
-GAME RULES:
-
-- The game has 2 players, playing in rounds
-- In each turn, a player rolls a dice as many times as he whishes. Each result get added to his ROUND score
-- BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
-- The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
-- The first player to reach 100 points on GLOBAL score wins the game
-
-*/
-
-var scores, roundScore, activePlayer, dice, gamePlaying;
+var scores, roundScore, activePlayer, maxScore, currentDice, previousDice, diceLog, gamePlaying;
 
 init();
 
 // Get random dice number
 document.querySelector('.btn-roll').addEventListener('click', function() {
     if (gamePlaying) {
-        // 1. Random number
-        var dice = Math.floor(Math.random() * 6) + 1;
 
-        // 2. Display the result
+        // Random number
+        var dice = Math.floor(Math.random() * 6) + 1;
+        // var dice = 6;
+        currentDice = dice;
+
+        // Add to diceLog, check save previousDice
+        diceLog.push(dice);
+        previousDice = diceLog[diceLog.length-2];
+
+        console.log('Previous: ', previousDice, ' Current: ', currentDice, ' Dicelog: ', diceLog);
+
+        // Display the result
         var diceDOM = document.querySelector('.dice');
         diceDOM.style.display = 'block';
         diceDOM.src = 'dice-' + dice + '.png';
 
-        // 3. Update the round score IF the rolled number was NOT a 1
+        // Update the round score IF the rolled number was NOT a 1
         if (dice !== 1) {
-            // Add score 
-            roundScore += dice;
-            document.querySelector('#current-' + activePlayer).textContent = roundScore;
+            // Check if player has thrown 6 two times in a row
+            if ((previousDice === currentDice) && (previousDice === 6 && currentDice === 6)) {
+                alert('player threw two times 6 in a row, entire score is lost');
+                roundScore = 0;
+                nextPlayer();
+            } else {
+                // Add score 
+                roundScore += dice;
+                document.querySelector('#current-' + activePlayer).textContent = roundScore;
+            }
         } else {
             // Next player
             nextPlayer();
@@ -39,6 +44,7 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 // Store the current round in hold
 document.querySelector('.btn-hold').addEventListener('click', function() {
     if (gamePlaying) {
+
         // Add CURRENT score to GLOBAL score
         scores[activePlayer] += roundScore;
 
@@ -46,7 +52,7 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
         // Check if player won the game
-        if (scores[activePlayer] >= 25) {
+        if (scores[activePlayer] >= maxScore) {
             document.querySelector('#name-' + activePlayer).innerText = 'winner!';
             document.querySelector('.dice').style.display = 'none';
             document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
@@ -55,6 +61,7 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
             document.querySelector('.btn-hold').classList.add('inactive');
 
             gamePlaying = false;
+        // Check if 6 trown 2 times in a row
         } else {
             nextPlayer();
         }
@@ -65,6 +72,9 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
 function nextPlayer() {
     activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
     roundScore = 0;
+    currentDice = 0;
+    previousDice = 0;
+    diceLog = [];
     
     document.getElementById('current-0').textContent = '0';
     document.getElementById('current-1').textContent = '0'; 
@@ -81,6 +91,14 @@ function nextPlayer() {
 // Start a new game
 document.querySelector('.btn-new').addEventListener('click', init);
 
+// Get max score on change
+var maxScoreInput = document.getElementById('max-score');
+maxScoreInput.addEventListener('change', getMaxScore);
+
+function getMaxScore() {
+    maxScore = parseInt(maxScoreInput.value);
+}
+
 // Initilize game
 
 function init() {
@@ -88,6 +106,8 @@ function init() {
     roundScore = 0;
     activePlayer = 0;
     gamePlaying = true;
+    maxScore = 25;
+    diceLog = [];
 
     document.querySelector('.btn-roll').classList.remove('inactive');
     document.querySelector('.btn-hold').classList.remove('inactive');
