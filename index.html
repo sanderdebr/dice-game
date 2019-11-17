@@ -28,13 +28,23 @@
                     <div class="player-current-score" id="current-1">0</div>
                 </div>
             </div>
-            
-            <input id="max-score" type="text" placeholder="What is the max score? Default 25">
             <button class="btn-new"><i class="ion-ios-plus-outline"></i>New game</button>
             <button class="btn-roll"><i class="ion-ios-loop"></i>Roll dice</button>
             <button class="btn-hold"><i class="ion-ios-download-outline"></i>Hold</button>
+            <button class="btn-settings"><i class="ion-ios-settings"></i>Settings</button>
+            <div class="settings">
+                <p>First one to reach the max score wins. If you throw a 1 once or a 6 two times in a row you'll lose all points that round.</p>
+                <input id="max-score" type="text" placeholder="What is the max score? Default 25">
+                <div class="form-group">
+                    <label for="two-dices">Play with 2 dices?</label>
+                    <input id="two-dices" type="checkbox">
+                </div>
+            </div>
             
             <img src="dice-5.png" alt="Dice" class="dice">
+
+            <img src="dice-5.png" alt="Dice" class="dice2">
+
         </div>
         
         <script src="app.js"></script>
