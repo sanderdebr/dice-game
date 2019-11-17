@@ -79,6 +79,8 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
             document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
             document.querySelector('.btn-roll').classList.add('inactive');
             document.querySelector('.btn-hold').classList.add('inactive');
+            document.querySelector('.btn-settings').classList.add('inactive');
+            document.querySelector('.settings').classList.remove('active');
 
             gamePlaying = false;
             twoDices = false;
@@ -150,11 +152,13 @@ function init() {
 
     document.querySelector('.btn-roll').classList.remove('inactive');
     document.querySelector('.btn-hold').classList.remove('inactive');
+    document.querySelector('.btn-settings').classList.remove('inactive');
 
     document.querySelector('.dice').style.display = 'none';
     document.querySelector('.dice2').style.display = 'none';
 
     document.getElementById('two-dices').checked = false;
+    document.getElementById('max-score').value = '';
 
     document.getElementById('score-0').textContent = '0';
     document.getElementById('score-1').textContent = '0';
